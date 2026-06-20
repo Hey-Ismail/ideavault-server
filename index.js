@@ -60,6 +60,37 @@ async function run() {
             res.send(result);
         });
 
+        //use can update / delete their ideas 
+        app.put("/ideas/:id", async (req, res) => {
+            const id = req.params.id;
+            const updatedIdea = req.body;
+
+            const query = {
+                _id: new ObjectId(id)
+            };
+
+            const updateDoc = {
+                $set: updatedIdea
+            };
+
+            const result = await ideasCollection.updateOne(
+                query,
+                updateDoc
+            );
+
+            res.send(result);
+        });
+
+        //detele part
+        app.delete("/ideas/:id", async (req, res) => {
+            const id = req.params.id;
+
+            const result = await ideasCollection.deleteOne({
+                _id: new ObjectId(id)
+            });
+
+            res.send(result);
+        });
         //showing login user ideas
         app.get("/my-ideas/:email", async (req, res) => {
             const email = req.params.email;
