@@ -51,6 +51,35 @@ async function run() {
             res.send(result);
         });
 
+        //ading user idea to the database
+        app.post("/ideas", async (req, res) => {
+            const idea = req.body;
+
+            const result = await ideasCollection.insertOne(idea);
+
+            res.send(result);
+        });
+
+        //showing login user ideas
+        app.get("/my-ideas/:email", async (req, res) => {
+            const email = req.params.email;
+
+            const result = await ideasCollection.find({ createdBy: email }).toArray();
+
+            res.send(result);
+        });
+
+
+        //showing limited data
+        app.get("/trending-ideas", async (req, res) => {
+            const result = await ideasCollection
+                .find()
+                .limit(6)
+                .toArray();
+
+            res.send(result);
+        });
+
 
 
     } finally {
