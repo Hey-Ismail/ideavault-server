@@ -111,6 +111,60 @@ async function run() {
             res.send(result);
         });
 
+        //created comment folder type 
+        const commentsCollection = database.collection("comments");
+
+        //user now post their commants
+        app.post("/comments", async (req, res) => {
+            const comment = req.body;
+
+            const result = await commentsCollection.insertOne(comment);
+
+            res.send(result);
+        });
+
+        //fetching the comments
+        app.get("/comments/:ideaId", async (req, res) => {
+            const ideaId = req.params.ideaId;
+
+            const result = await commentsCollection
+                .find({ ideaId })
+                .toArray();
+
+            res.send(result);
+        });
+
+        //deleting the comments
+        app.delete("/comments/:id", async (req, res) => {
+            const id = req.params.id;
+
+            const result = await commentsCollection.deleteOne({
+                _id: new ObjectId(id)
+            });
+
+            res.send(result);
+        });
+
+        //updating the comments
+        app.put("/comments/:id", async (req, res) => {
+            const id = req.params.id;
+            const updatedComment = req.body;
+
+            const result = await commentsCollection.updateOne(
+                {
+                    _id: new ObjectId(id)
+                },
+                {
+                    $set: {
+                        comment: updatedComment.comment
+                    }
+                }
+            );
+
+            res.send(result);
+        });
+
+
 
 
     } finally {
