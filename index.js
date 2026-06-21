@@ -165,14 +165,22 @@ async function run() {
         });
 
         //user can filter their comments 
-        app.get("comments/:email", async (req, res) => {
+        app.get("/my-comments/:email", async (req, res) => {
             const email = req.params.email;
 
-            const result = await commentsCollection
+            const comments = await commentsCollection
                 .find({ userEmail: email })
                 .toArray();
 
-            res.send(result);
+            for (const comment of comments) {
+                const idea = await ideasCollection.findOne({
+                    id: Number(comment.ideaId),
+                });
+
+                comment.ideaTitle = idea?.title;
+            }
+
+            res.send(comments);
         });
 
 
