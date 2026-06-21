@@ -164,6 +164,19 @@ async function run() {
             res.send(result);
         });
 
+        //user can filter their comments 
+        app.get("comments/:email", async (req, res) => {
+            const email = req.params.email;
+
+            const result = await commentsCollection
+                .find({ userEmail: email })
+                .toArray();
+
+            res.send(result);
+        });
+
+
+
 
 
 
